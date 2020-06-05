@@ -7,6 +7,10 @@ cap.set(3,frameWidth)
 cap.set(4,frameHeight)
 cap.set(10,150)
 
+def findColor(img):
+    imgHSV=cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+
 while True:
     success,img=cap.read()
     cv2.imshow("Result",img)
