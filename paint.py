@@ -13,15 +13,27 @@ myColors = [[5,107,0,19,255,255],
             [57,76,0,100,255,255],
             [90,48,0,118,255,255]]
 
+myColorValues = [[51,153,255],
+                 [255,0,255],
+                 [0,255,0],
+                 [255,0,0]]
+
 
 def findColor(img, myColors):
     imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    count = 0
+    newPoints = []
     for color in myColors:
         lower = np.array(color[0:3])
         upper = np.array(color[3:6])
         mask = cv2.inRange(imgHSV, lower, upper)
-        getContours(mask)
+        x,y=getContours(mask)
+        cv2.circle(imgResult, (x, y), 15, myColorValues[count], cv2.FILLED)
+        if x != 0 and y != 0:
+            newPoints.append([x, y, count])
+        count += 1
         # cv2.imshow(str(color[0]),mask)
+    return newPoints
 
 
 
@@ -31,9 +43,9 @@ def getContours(img):
     for cnt in contours:
         area = cv2.contourArea(cnt)
         if area>500:
-            cv2.drawContours(imgResult, cnt, -1, (255, 0, 0), 3)
-            peri = cv2.arcLength(cnt,True)
-            approx = cv2.approxPolyDP(cnt,0.02*peri,True)
+            #cv2.drawContours(imgResult, cnt, -1, (255, 0, 0), 3)
+            per = cv2.arcLength(cnt,True)
+            approx = cv2.approxPolyDP(cnt,0.02*per,True)
             x, y, w, h = cv2.boundingRect(approx)
     return x+w//2,y
 
