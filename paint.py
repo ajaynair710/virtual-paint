@@ -18,8 +18,10 @@ myColorValues = [[51,153,255],
                  [0,255,0],
                  [255,0,0]]
 
+myPoints =  []
 
-def findColor(img, myColors):
+
+def findColor(img,myColors,myColorValues):
     imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     count = 0
     newPoints = []
@@ -50,10 +52,20 @@ def getContours(img):
     return x+w//2,y
 
 
+def drawOnCanvas(myPoints,myColorValues):
+    for point in myPoints:
+        cv2.circle(imgResult, (point[0], point[1]), 10, myColorValues[point[2]], cv2.FILLED)
+
+
 while True:
     success,img=cap.read()
     imgResult = img.copy()
-    findColor(img, myColors)
+    newPoints = findColor(img, myColors,myColorValues)
+    if len(newPoints) != 0:
+        for newP in newPoints:
+            myPoints.append(newP)
+    if len(myPoints) != 0:
+        drawOnCanvas(myPoints, myColorValues)
     cv2.imshow("Result",imgResult)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
